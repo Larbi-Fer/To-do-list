@@ -6,17 +6,28 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { supabase } from "@/utils/supabaseClient"
+import { useRouter } from "next/navigation"
 
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // login logic
-    setTimeout(() => setLoading(false), 1000)
+    const {data, error} = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    setLoading(false)
+    console.log(data, error);
+    if (!error) {
+      router.push('/')
+      return;
+    }
   }
 
   return (

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { supabase } from "@/utils/supabaseClient"
 
 const Signup = () => {
   const [username, setUsername] = useState("")
@@ -17,8 +18,17 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // signup logic
-    setTimeout(() => setLoading(false), 1000)
+    const {data, error} = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username
+        }
+      }
+    })
+    setLoading(false)
+    console.log(data, error);
   }
 
   return (
