@@ -50,8 +50,9 @@ const SAMPLE_TASKS: Task[] = [
 ]
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>(SAMPLE_TASKS)
+  const [tasks, setTasks] = useState<Task[]>([])
   const [userId, setUserId] = useState<string>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     (async() => {
@@ -59,11 +60,17 @@ export default function Home() {
       setUserId(user?.id)
 
       // Fetch Tasks
-      const {data, error} = await supabase.from('Tasks').select('*').eq('user', user?.id)
-      console.log(data, error);
+      const {data, error} = await supabase.from('Tasks').select('*').eq('user', user?.id).order('date').limit(5)
+
+      if (!error) {
+        setTasks(data)
+        setLoading(false)
+      } else {
+        console.log(error);
+        
+      }
     })()
   }, [])
-  
 
   const handleAddTask = async(title: string, date: Date, startTime: string, endTime: string, tags: string[], done: () => void) => {
     const newTask: Task = {
@@ -102,12 +109,18 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <TaskHeader />
       <TaskInput onAddTask={handleAddTask} />
-      <TaskList
-        tasks={tasks}
-        pendingCount={pendingCount}
-        onToggleTask={handleToggleTask}
-        onDeleteTask={handleDeleteTask}
-      />
+      {loading ?
+        <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+          <b>Loading ...</b>
+        </div>
+      :
+        <TaskList
+          tasks={tasks}
+          pendingCount={pendingCount}
+          onToggleTask={handleToggleTask}
+          onDeleteTask={handleDeleteTask}
+        />
+      }
     </div>
   )
 }

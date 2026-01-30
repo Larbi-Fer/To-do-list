@@ -58,7 +58,7 @@ export function TaskItem({
           
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            <span>Date: {format(new Date(date), 'MMM dd')}{' '}
+            <span className={new Date(date) < new Date() ? 'text-red-600' : ''}>Date: {format(new Date(date), 'MMM dd')}{' '}
               <b>{startTime.slice(0, 5)}</b> TO <b>{endTime.slice(0, 5)}</b>
               </span>
           </div>
@@ -83,7 +83,7 @@ export function TaskItem({
                 onDelete(id)
                 setShowMenu(false)
               }}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 first:rounded-t-lg last:rounded-b-lg"
+              className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 first:rounded-t-lg last:rounded-b-lg"
             >
               Delete
             </button>
