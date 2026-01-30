@@ -5,13 +5,15 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Calendar, MoreVertical } from "lucide-react"
 import { format } from "date-fns"
+import { Badge } from "./ui/badge"
 
 interface TaskItemProps {
   id: string
   title: string
-  tags: { label: string; color: string }[]
-  startDate?: Date
-  deadline?: Date
+  tags: string[]
+  startTime:  string
+  endTime: string
+  date: string
   completed?: boolean
   onToggle: (id: string) => void
   onDelete: (id: string) => void
@@ -21,14 +23,14 @@ export function TaskItem({
   id,
   title,
   tags,
-  startDate,
-  deadline,
+  date,
+  startTime, endTime,
   completed = false,
   onToggle,
   onDelete,
 }: TaskItemProps) {
   const [showMenu, setShowMenu] = useState(false)
-
+  
   return (
     <div className={`flex gap-4 p-4 rounded-lg border transition-colors ${
       completed ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-200 hover:bg-gray-50'
@@ -48,33 +50,19 @@ export function TaskItem({
         
         <div className="flex flex-wrap gap-2 mt-2">
           {tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className={`text-xs font-medium px-2 py-1 rounded uppercase tracking-wide ${
-                tag.color === 'blue' ? 'bg-blue-100 text-blue-700' :
-                tag.color === 'red' ? 'bg-red-100 text-red-700' :
-                tag.color === 'purple' ? 'bg-purple-100 text-purple-700' :
-                'bg-gray-100 text-gray-700'
-              }`}
-            >
-              {tag.label}
-            </span>
+            <Badge key={idx} variant='outline' className="bg-[#ddd]">{tag}</Badge>
           ))}
         </div>
 
         <div className="flex gap-4 mt-3 text-sm text-gray-600">
-          {startDate && (
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              <span>Start: {format(startDate, 'MMM dd')}</span>
-            </div>
-          )}
-          {deadline && (
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              <span className="text-red-600 font-medium">Deadline: {format(deadline, 'MMM dd')}</span>
-            </div>
-          )}
+          
+          <div className="flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            <span>Date: {format(new Date(date), 'MMM dd')}{' '}
+              <b>{startTime.slice(0, 5)}</b> TO <b>{endTime.slice(0, 5)}</b>
+              </span>
+          </div>
+
         </div>
       </div>
 

@@ -5,40 +5,47 @@ import { TaskHeader } from '@/components/TaskHeader'
 import { TaskInput } from '@/components/TaskInput'
 import { TaskList } from '@/components/TaskList'
 import { supabase } from '@/utils/supabaseClient'
+import { format } from 'date-fns'
 
 const SAMPLE_TASKS: Task[] = [
   {
     id: '1',
     title: 'Finalize Marketing Strategy',
     tags: [
-      { label: 'WORK', color: 'blue' },
-      { label: 'URGENT', color: 'red' },
+      'WORK',
+      'URGENT'
     ],
-    startDate: new Date(2024, 9, 12),
-    deadline: new Date(2024, 9, 15),
+    startTime: '10:00:00',
+    endTime: '12:00:00',
+    date: "2026-01-30",
   },
   {
     id: '2',
     title: 'Update Website Footer',
-    tags: [{ label: 'DESIGN', color: 'purple' }],
-    startDate: new Date(2024, 9, 14),
-    deadline: new Date(2024, 9, 16),
+    tags: ['DESIGN'],
+    startTime: '10:00:00',
+    endTime: '12:00:00',
+    date: "2026-01-30",
   },
   {
     id: '3',
     title: 'Review Weekly Analytics',
-    tags: [{ label: 'REPORTING', color: 'gray' }],
+    tags: ['REPORTING'],
+    startTime: '10:00:00',
+    endTime: '12:00:00',
+    date: "2026-01-30",
     completed: true,
   },
   {
     id: '4',
     title: 'Quarterly Budget Planning',
     tags: [
-      { label: 'FINANCE', color: 'purple' },
-      { label: 'WORK', color: 'blue' },
+      'FINANCE',
+      'WORK'
     ],
-    startDate: new Date(2024, 9, 18),
-    deadline: new Date(2024, 9, 30),
+    startTime: '10:00:00',
+    endTime: '12:00:00',
+    date: "2026-01-30",
   },
 ]
 
@@ -62,8 +69,10 @@ export default function Home() {
     const newTask: Task = {
       id: Date.now().toString(),
       title,
-      tags: [],
+      tags,
+      date: format(date, 'yyyy-MM-dd'), startTime, endTime
     }
+    
     const {error} = await supabase.from('Tasks').insert({
       title, date, endTime, startTime, tags, user: userId
     })
@@ -71,7 +80,7 @@ export default function Home() {
     if (!error) {
       done()
     }
-    
+
     setTasks([newTask, ...tasks])
   }
 

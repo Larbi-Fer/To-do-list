@@ -1,9 +1,10 @@
 interface Task {
   id: string
   title: string
-  tags: { label: string; color: string }[]
-  startDate?: Date | string
-  deadline?: Date | string
+  tags: string[]
+  startTime:  string
+  endTime: string
+  date: string
   completed?: boolean
 }
 
