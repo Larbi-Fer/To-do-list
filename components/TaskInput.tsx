@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, Clock2Icon, Plus, XIcon } from "lucide-react"
+import { CalendarIcon, Clock2Icon, LoaderIcon, Plus, PlusCircleIcon, XIcon } from "lucide-react"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
@@ -12,7 +12,7 @@ import { Card, CardContent, CardFooter } from "./ui/card"
 import { Badge } from "./ui/badge"
 
 interface TaskInputProps {
-  onAddTask: (task: string) => void
+  onAddTask: (task: string, date: Date, startTime: string, endTime: string, tags: string[], done: () => void) => void
 }
 
 export function TaskInput({ onAddTask }: TaskInputProps) {
@@ -21,12 +21,18 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
   const [startTime, setStartTime] = useState('10:00:00')
   const [endTime, setEndTime] = useState('12:30:00')
   const [tags, setTags] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (value.trim()) {
-      onAddTask(value)
-      setValue("")
+      setLoading(true)
+      onAddTask(value, date!, startTime, endTime, tags, () => {
+        setDate(undefined)
+        setValue("")
+        setTags([])
+        setLoading(false)
+      })
     }
   }
 
@@ -70,7 +76,15 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
             value={value}
             onChange={handleChange}
             className="flex-1"
+            disabled={loading}
           />
+          <InputGroupAddon>
+            {loading ? 
+              <LoaderIcon className="animate-spin" />
+              :
+              <PlusCircleIcon />
+            }
+          </InputGroupAddon>
         </InputGroup>
         <CalendarField
           date={date}

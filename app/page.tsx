@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TaskHeader } from '@/components/TaskHeader'
 import { TaskInput } from '@/components/TaskInput'
 import { TaskList } from '@/components/TaskList'
+import { supabase } from '@/utils/supabaseClient'
 
 const SAMPLE_TASKS: Task[] = [
   {
@@ -43,13 +44,34 @@ const SAMPLE_TASKS: Task[] = [
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>(SAMPLE_TASKS)
+  const [userId, setUserId] = useState<string>()
 
-  const handleAddTask = (title: string) => {
+  useEffect(() => {
+    (async() => {
+      const {data: {user}} = await supabase.auth.getUser()
+      setUserId(user?.id)
+
+      // Fetch Tasks
+      const {data, error} = await supabase.from('Tasks').select('*').eq('user', user?.id)
+      console.log(data, error);
+    })()
+  }, [])
+  
+
+  const handleAddTask = async(title: string, date: Date, startTime: string, endTime: string, tags: string[], done: () => void) => {
     const newTask: Task = {
       id: Date.now().toString(),
       title,
       tags: [],
     }
+    const {error} = await supabase.from('Tasks').insert({
+      title, date, endTime, startTime, tags, user: userId
+    })
+    
+    if (!error) {
+      done()
+    }
+    
     setTasks([newTask, ...tasks])
   }
 
