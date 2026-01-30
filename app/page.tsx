@@ -99,7 +99,10 @@ export default function Home() {
     )
   }
 
-  const handleDeleteTask = (id: string) => {
+  const handleDeleteTask = async (id: string) => {
+    const {error} = await supabase.from('Tasks').delete().eq('id', id)
+    if (error) return console.log(error);
+
     setTasks(tasks.filter(task => task.id !== id))
   }
 
