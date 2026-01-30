@@ -73,25 +73,25 @@ export default function Home() {
   }, [])
 
   const handleAddTask = async(title: string, date: Date, startTime: string, endTime: string, tags: string[], done: () => void) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      tags,
-      date: format(date, 'yyyy-MM-dd'), startTime, endTime
-    }
-    
-    const {error} = await supabase.from('Tasks').insert({
+    const {error, data} = await supabase.from('Tasks').insert({
       title, date, endTime, startTime, tags, user: userId
-    })
-    
+    }).select()
+
     if (!error) {
       done()
     }
 
-    setTasks([newTask, ...tasks])
+    // @ts-ignore
+    setTasks([data[0], ...tasks])
   }
 
-  const handleToggleTask = (id: string) => {
+  const handleToggleTask = async(id: string) => {
+    const task = tasks.find(task => task.id == id)
+
+    const {error} = await supabase.from('Tasks').update({ completed: !task?.completed }).eq('id', id)
+    if (error) {
+      return console.log(error);
+    }
     setTasks(
       tasks.map(task =>
         task.id === id ? { ...task, completed: !task.completed } : task
