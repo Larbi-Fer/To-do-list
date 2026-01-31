@@ -6,8 +6,9 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
 import { supabase } from "@/utils/supabaseClient"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { EyeOffIcon, MailIcon, UserCircle2Icon } from "lucide-react"
 
 const Signup = () => {
   const [username, setUsername] = useState("")
@@ -43,40 +44,55 @@ const Signup = () => {
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Choose your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
+                <InputGroup>
+                  <InputGroupInput
+                    id="username"
+                    type="text"
+                    placeholder="Choose your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                  <InputGroupAddon>
+                    <UserCircle2Icon />
+                  </InputGroupAddon>
+                  </InputGroup>
                 <FieldDescription>This will be your display name</FieldDescription>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                <InputGroup>
+                  <InputGroupInput
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    />
+                  <InputGroupAddon>
+                    <MailIcon />
+                  </InputGroupAddon>
+                </InputGroup>
                 <FieldDescription>We'll never share your email</FieldDescription>
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <InputGroup>
+                  <InputGroupInput
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <InputGroupAddon>
+                    <EyeOffIcon />
+                  </InputGroupAddon>
+                </InputGroup>
                 <FieldDescription>Use at least 8 characters</FieldDescription>
               </Field>
             </FieldGroup>
