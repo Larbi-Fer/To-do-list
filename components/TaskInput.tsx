@@ -10,6 +10,7 @@ import { Calendar } from "./ui/calendar"
 import { format } from "date-fns"
 import { Card, CardContent, CardFooter } from "./ui/card"
 import { Badge } from "./ui/badge"
+import { toast } from "sonner"
 
 interface TaskInputProps {
   onAddTask: (task: string, date: Date, startTime: string, endTime: string, tags: string[], done: () => void) => void
@@ -26,6 +27,9 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (value.trim()) {
+      if (!date) {
+        return toast.info('Please select a date.', {position: 'top-center'})
+      }
       setLoading(true)
       onAddTask(value, date!, startTime, endTime, tags, () => {
         setDate(undefined)
